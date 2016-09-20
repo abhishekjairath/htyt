@@ -1,6 +1,6 @@
 {
   "name": "htyt",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Play youtube videos in hyperterm.",
   "main": "index.js",
   "scripts": {
