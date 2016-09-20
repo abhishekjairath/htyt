@@ -11,6 +11,10 @@
     "youtube"
   ],
   "author": "Abhishek Jairath <jairath.abhishek@gmail.com> (http://abhishekjairath.com)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abhishekjairath/htyt"
+  },
   "license": "MIT",
   "dependencies": {
     "request": "^2.75.0",
