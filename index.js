@@ -3,7 +3,7 @@ const searchYoutube = require("./search-youtube.js");
 exports.middleware = (store) => (next) => (action) => {
   if ('SESSION_ADD_DATA' === action.type) {
     const { data } = action;
-    if (/(htyt\.[\w\s]+: command not found)|(command not found: htyt\.[\w\s]+)/.test(data)) {
+    if (/(htyt\.[\w\s,]+: command not found)|(command not found: htyt\.[\w\s,]+)/.test(data)) {
       let arg = data.substring(data.indexOf('.')+1, data.lastIndexOf(':'));
       if(!(/(^\s*$)/.test(arg))){
         store.dispatch({
@@ -36,7 +36,8 @@ exports.mapTermsState = (state, map) => {
 
 exports.getTermProps = (uid, parentProps, props) => {
   return Object.assign(props, {
-    htytEmbed: parentProps.htytEmbed
+    htytEmbed: parentProps.htytEmbed,
+    uid: uid
   });
 }
 
@@ -46,12 +47,14 @@ exports.decorateTerm = (Term, { React, notify }) => {
       super(props, context);
       this._onTerminal = this._onTerminal.bind(this);
       this._screenNode = null;
+      this.scrollPort = null;
     }
 
     _onTerminal (term) {
       if (this.props.onTerminal) this.props.onTerminal(term);
       this._screenNode = term.screen_;
       this._cursor = term.cursorNode_;
+      this.scrollPort = term.scrollPort_;
     }
 
     componentWillReceiveProps (next) {
@@ -73,14 +76,25 @@ exports.decorateTerm = (Term, { React, notify }) => {
       const screen = this._screenNode;
       const cursor = this._cursor;
       if (videoId) {
-        const cursorNode = document.createElement('iframe');
-        cursorNode.src = `https://www.youtube.com/embed/${videoId}?rel=0&amp;controls=0&amp;showinfo=0`
-        cursorNode.frameborder = "0";
-        cursorNode.allowfullscreen;
-        cursorNode.height = '315';
-        cursorNode.width = '560';
-        screen.cursorRowNode_.replaceChild(cursorNode, screen.cursorNode_)
-        screen.cursorNode_ = cursorNode;
+        /*
+          Embedding youtube videos within the current tab
+          Idea dropped due to cursor position syncing.
+        */
+        // const cursorNode = document.createElement('iframe');
+        // cursorNode.src = `https://www.youtube.com/embed/${videoId}?rel=0&amp;controls=0&amp;showinfo=0`
+        // cursorNode.frameborder = "0";
+        // cursorNode.allowfullscreen;
+        // cursorNode.height = '315';
+        // cursorNode.width = '560';
+        // screen.cursorRowNode_.style.height = "330px";
+        // screen.cursorRowNode_.replaceChild(cursorNode, screen.cursorNode_)
+        // screen.cursorNode_ = cursorNode;
+        // this.scrollPort.redraw_();
+        store.dispatch({
+          type: 'SESSION_URL_SET',
+          uid: this.props.uid,
+          url: "https://www.youtube.com/watch?v="+videoId
+        });
       }
     }
 
