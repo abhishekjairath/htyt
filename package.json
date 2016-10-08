@@ -1,12 +1,13 @@
 {
   "name": "htyt",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Play youtube videos in hyperterm.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
+    "hyper",
     "hyperterm",
     "youtube"
   ],
