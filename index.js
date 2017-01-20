@@ -34,20 +34,21 @@ exports.mapTermsState = (state, map) => {
   });
 };
 
-exports.getTermProps = (uid, parentProps, props) => {
+const passProps = (uid, parentProps, props) => {
   return Object.assign(props, {
-    htytEmbed: parentProps.htytEmbed,
-    uid: uid
+    htytEmbed: parentProps.htytEmbed
   });
 }
+
+exports.getTermGroupProps = passProps;
+exports.getTermProps = passProps;
 
 exports.decorateTerm = (Term, { React, notify }) => {
   return class extends React.Component {
     constructor (props, context) {
       super(props, context);
       this._onTerminal = this._onTerminal.bind(this);
-      this._screenNode = null;
-      this.scrollPort = null;
+      this.term = null
     }
 
     _onTerminal (term) {
@@ -73,7 +74,7 @@ exports.decorateTerm = (Term, { React, notify }) => {
     }
 
     renderEmbed (videoId){
-      const screen = this._screenNode;
+	    const screen = this._screenNode;
       const cursor = this._cursor;
       if (videoId) {
         /*
@@ -92,7 +93,7 @@ exports.decorateTerm = (Term, { React, notify }) => {
         // this.scrollPort.redraw_();
         store.dispatch({
           type: 'SESSION_URL_SET',
-          uid: this.props.uid,
+          uid: store.getState().sessions.activeUid,
           url: "https://www.youtube.com/watch?v="+videoId
         });
       }
